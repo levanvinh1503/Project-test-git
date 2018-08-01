@@ -1,0 +1,38 @@
+
+function dkb(CurriculumID, StudyUnitID, HideID, takeNumber) {
+    console.log('['+CurriculumID+'] #'+takeNumber+' - dang g?i request...') ;
+    $.ajax({
+        type: 'GET',
+        url: '/DangKiHocPhan?StudyUnitID=' + StudyUnitID + '&CurriculumID=' + CurriculumID + '&Hide=' + HideID,
+        async: true,
+        dataType: 'html',
+        success: function (data) {
+            if (data.includes('thành công') && !data.includes('không thành công')) {
+                console.log('['+CurriculumID+'] #'+takeNumber+' - Ðang kí thành công');
+                return;
+            }
+            else {
+                console.log('['+CurriculumID+'] #'+takeNumber+' - Err: '+data);
+                setTimeout(function() {
+                    dkb(CurriculumID, StudyUnitID, HideID, (takeNumber+1));
+                },0);
+                return;
+            }
+        },
+	error: function(e) {
+		console.log(e);
+		setTimeout(function() {
+                    dkb(CurriculumID, StudyUnitID, HideID, (takeNumber+1));
+		},10);
+		return;
+	}
+    });
+};
+
+var CurriculumID = 'DIGR240485';
+var StudyUnitID = '171DIGR240485';
+var HideID = '171DIGR240485_01$4.00$171DIGR240485$1$1';
+
+
+
+dkb(CurriculumID, StudyUnitID, HideID, 0);
